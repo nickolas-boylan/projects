@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Elepharma</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+        <script defer src="script.js"></script>
+    </head>
+    <body>
+        <h1>Elepharma Pipeline Scraper</h1>
+        
+        <!-- A container for the user's company-selection process. This
+             includes a dropdown button that toggles a list of checkboxes
+             for selecting which companies to scrape -->
+        <div class="selectionProcess">
+            <label for="selectedCompanies"></label>
+            <div class="dropdownBar">
+                <button id="dropdownButton">Select Companies</button>
+
+                <!-- The list of companies that can be selected/deselected
+                 with the help of JavaScript -->
+                <div id="fullList" class="companyContent">
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" id="selectEveryCompany">
+                            Select All
+                        </label>
+                    </div>
+                    <hr>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="amgen">
+                            Amgen
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="bayer">
+                            Bayer
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="csl">
+                            CSL
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="gilead">
+                            Gilead
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="mitsubishi">
+                            Mitsubishi
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="moderna">
+                            Moderna
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="regeneron">
+                            Regeneron
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany" 
+                                   value="roche">
+                            Roche
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="sanofi">
+                            Sanofi
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="teva">
+                            Teva
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="ucb">
+                            UCB
+                        </label>
+                    </div>
+                    <div class="nextDropdownItem">
+                        <label>
+                            <input type="checkbox" name="nextCompany"
+                                   value="xbiotech">
+                            XBiotech
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" id="startScrapingButton">Scrape</button>
+
+       <button id="csvDownload" class="csvDownloadClass">
+            <span class="csvDownloadText">Download CSV</span>
+        </button>
+
+        <!-- A container for layout and styling of the treatments found
+             via the scraping process. Can either be shown in a grid-like
+             or list-like view -->
+        <div id="buttonBar">
+            <h2>Found Treatments</h2>
+            <div class="viewToggle">
+                <button id="listToggle"><embed src="list-ul.svg"/></button>
+                <button id="gridToggle"><embed src="grid.svg"/></button>
+            </div>
+        </div>
+
+        <div id="treatmentsAndHeaders">
+            <div id="rowWithFilters" class="rowWithFiltersContainer">
+                <div class="dropDown" id="sortDropdown">
+                    <select class="madeFilter sort " id="sortMenu">
+                        <option value="Company" key="company">Company</option>
+                        <option value="Indication" key="indication">
+                            Indication
+                        </option>
+                        <option value="Phase" selected key="phase">
+                            Phase
+                        </option>
+                        <option value="Therapeutic Area" key="therapeutic_area">
+                            Therapeutic Area
+                        </option>
+                        <option value="Treatment Name" key="treatment_name">
+                            Treatment Name
+                        </option>
+                    </select>
+                    <span class="dirGrid" id="arrowForGrid">▲</span>
+                </div>
+
+                <div class="dropDown">
+                    <select id="filterByCompany" class="madeFilter">
+                        <option value="allCompanies">All Companies</option>
+                    </select>
+                </div>
+                
+                <div class="dropDown">
+                    <select id="filterByPhase" class="madeFilter">
+                        <option value="allPhases">All Phases</option>
+                    </select>
+                </div>
+
+                <div class="filterWithTextContainer">
+                    <div class="dropDown">
+                        <select id="filterByCategory" class="madeFilter">
+                            <option value="therapeutic_area">
+                                Therapeutic Area
+                            </option>
+                            <option value="indication">Indication</option>
+                            <option value="treatment_name">
+                                Treatment Name
+                            </option>
+                        </select>
+                    </div>
+                    <input type="text" id="specificTextInput"
+                        placeholder="Search..." class="madeFilter">
+                    <button id="removeCriteria" class="removeCriteriaButton">
+                        clear
+                    </button>
+                </div>
+
+                <button id="clearAllFilters" class="madeFilter" type="button">
+                    Clear
+                </button>
+
+            </div>
+
+            <!-- A header row displayed in 'List' view, labeling each column -->
+            <div id="listHeader">
+                <p id="treatmentNameHeader">
+                    <strong>Treatment Name</strong>
+                    <span class="sortFilterArrow" id="sortArrowTreatmentName">
+                        ▲
+                    </span>
+                </p>
+                <p id="companyHeader">
+                    <strong>Company</strong>
+                    <span class="sortFilterArrow" id="sortArrowCompany">
+                        ▲
+                    </span>
+                </p>
+                <p id="therapeuticAreaHeader">
+                    <strong>Therapeutic Area</strong>
+                    <span class="sortFilterArrow" id="sortArrowTherapeuticArea">
+                        ▲
+                    </span>
+                </p>
+                <p id="indicationHeader">
+                    <strong>Indication</strong>
+                    <span class="sortFilterArrow" id="sortArrowIndication">
+                        ▲
+                    </span>
+                </p>
+                <p id="phaseHeader">
+                    <strong>Phase</strong>
+                    <span class="sortFilterArrow" id="sortArrowPhase">▲</span>
+                </p>
+            </div>
+
+            <!-- A container where the scraped treatments will appear -->
+            <div id="foundTreatments" class="listView"></div>
+        </div>
+
+        <div id="loadingAni" class="loadingAniContainer">
+            <div class="spinner"></div>
+            <p id="loadingMessage" class="loadingMessageContainer"></p>
+        </div>
+
+        <!-- A container for holding the current status
+             of each individual company currently being scraped -->
+        <div id="statusBarContainer" class="statusBarClass">
+            <div id="statusBarCompanies" class="statusBarIndividuals"></div>
+            <div id="statusBarIdentifier" class="statusBarIndividualIds"></div>
+        </div>
+
+        <div id="currentlyEmpty" class="currentlyEmptyContainer">
+            <div class="currentlyEmptyIcon">!</div>
+            <h3>No Treatments Found</h3>
+            <p>
+                Please try selecting different companies or updating search
+                criteria.
+            </p>
+        </div>
+
+        <div id="noConnection" class="noConnectionContainer">
+            <div class="noConnectionIcon">!</div>
+            <h3>Oops! Sorry, something went wrong</h3>
+        </div>
+        
+        <!-- An initial landing page message. Shown before the user selects
+         any companies they wish to scrape. -->
+        <div id="landing" class="landingContainer">
+            
+            <div class="landingIcon">+</div>
+            <h3>Select the companies you would like to scrape!</h3>
+        </div>
+    </body>
+
+</html>
