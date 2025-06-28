@@ -1,0 +1,150 @@
+/**********************************************************
+ * Final Project: ElePharma
+ * CS 21
+ * README
+ * Nickolas Boylan
+ * Matthew Zandi
+ *********************************************************/
+
+Program Purpose:
+
+    ElePharma helps to eliminate the manual process of visiting hundreds of 
+    pharmaceutical development pipeline pages, grabbing the pipeline tables, 
+    and consolidating all of the information into a more readable format. 
+    With ElePharma a user can simply check the companies they are interested, 
+    click a single button, and watch a progress bar flip tiles from gray 
+    to blue as each site finishes dynamically scraping all of the information 
+    related to the treatments being developed by the selected companies. 
+    An entire multi-company pipeline-every treatment name, therapeutic area, 
+    indication, and phase-is searchable, filterable, sortable, and vieweable 
+    as table rows or grid cards, while also being downloadable as either 
+    a full databset or an subset currently on screen. The whole process 
+    leverages concurrency to get past any latency involved in laoding 
+    JavaScript-heavy pages. Elepharma helps to turn a job that used to 
+    take hours in one that can be completed in a matter of seconds.
+
+
+Compile/run:
+
+    To launch ElePharma you need a recent Python 3 interpreter and the 
+    libraries listed in requriments.txt. The quickest path is to create a 
+    virtual environment, install the necessary packages, point an enviornment 
+    variable at that Zyte API key, and then run the server
+
+    1. Install depdencies exactly as we used them during development 
+       (requests, beautifulsoup4, python-dotenv):
+           pip install -r requirments.txt
+
+    2. Use the terminal to move to the directory that you placed all of the
+       given files within. Once there, start the threaded HTTP server on 
+       localhost:5000 by doing:
+        python3 server.py
+    
+    3. Open the dashboard in any browser:
+        open http://localhost:5000
+    
+    4. To get the full effects of the program, we recommend opening it in a
+       second tab and then running two scraping requests at once to see the
+       entire scope of the concurrent request handling.
+
+
+Files:
+
+    server.py:
+        - Launches the application: instantiates our custom “Server” 
+          (a threaded HTTP server), binds it to localhost:5000, and calls 
+          “serve_forever()”. All request routing is delegated to 
+          “RequestManager”, but this file also owns the clean shutdown logic
+          (“quit_servering”) so Ctrl-C can also stop every background thread.
+
+    requirements.txt:
+        - Details the versions of the third-party libraries used to help 
+          us complete this web application: "requests", "beautifulsoup4", 
+          and "python-dotenv". Installing this file guarantees the same 
+          environment we used during development.
+
+    .env:
+        - Local configuration file that holds secret variables such as 
+          our Zyte API key. python-dotenv loads it automatically when the 
+          backend starts, so you never need to export the key in your shell.
+
+    backend/
+        company_scrapers/
+            Main_scraper.py:
+                - Abstract base class that stores company name, URL, Zyte key, 
+                  provides “fetch_with_zyte()” and the universal “clean_phase” 
+                  normalizer. Every concrete scraper inherits from this and 
+                  overrides only “scrapng_implementation()”.
+
+            amgen_scraper.py…xbiotech_scraper.py:
+                - One file per company (12 total). Each file supplies HTML/CSS 
+                  selectors and parsing rules tailored to that site, 
+                  returning a list of treatment dictionaries. No concurrency 
+                  code lives here. Only extraction logic which makes new 
+                  scrapers easy to add.
+
+    concurrent_code/
+        request_manager.py:
+            - Maps HTTP routes to the concurrency engine: Post /scrape starts 
+              a new ScraperManager; Get /get_response streams progress updates; 
+              Get /get_final returns the merged JSON; GET /download_csv streams 
+              the finished CSV.
+        scraper_manager.py
+            - Orchestrator created per-scrape. Spawns one producer thread per 
+              company, a CSV consumer thread, and a weather that signals 
+              completion events to the queues.
+        producer.py
+            - Target function for every producer thread. Calls its scraper, 
+              inserts the batch into both queues, and queues a status string 
+              so the UI can flip a progress tile on the progress bar.
+        scraper_queue.py
+            - Dual-purpose queue: holds treatment dictionaries and textual 
+              status strings. Separate locks/conditions for each list plus an 
+              Event that tells “/get_final” when all producers are done.
+        treatment_file_queue.py
+            - Queue dedicated to the CSV pipeline. Producers enqueue 
+              treatment batches; the consumer dequeues one row at a time. 
+              A sentinel “None” marks end-of-treatment-stream, and an Event 
+              signals when the CSV string is ready for download.
+        file_consumer.py
+            - A single thread that writes rows to an in-memory StringIO in 
+              real time, then seals the CSV and sets the ready event. Using 
+              StringIO avoids file related race conditions.
+
+    frontend/
+        index.html:
+            - The main page associated with the HTML which includes a dropdown 
+              for company selection a scraping button, a container holding the 
+              progress-bar, a filter bar, and the toggle buttons that allow 
+              users to choose between a list view and a grid view Also helps to 
+              embed two SVG icons and links.
+        script.js:
+            - This file helps to handle all of the functionality associated 
+              with the frontend. It handles the logic associated with the 
+              checkboxes, renders status-bar updates, builds the treatments 
+              table/grid, applies filters and sorts, and helps to construct 
+              client-side CSV files.
+        styles.css:
+            - This file helps to design the responsive pieces of our 
+              application by defining things like the status-bar tiles, 
+              the dimensions of the treatment cards, the hovering states, etc.
+        grid.svg, list-ul.svg: 
+            - These are simple icons used as buttons that can be toggled 
+              between the list and grid display modes.
+        favicon.ico
+            - This is an elephant icon that is used within the tab so it 
+              is identifiable when multiple tabs are opened up on a browser.
+
+Time Spent:    
+     We spent around 2 months creating this product.
+
+
+Acknowledgements: 
+
+    The project leans on multiple different outside resources. Zyte allows
+    us to fetch fully rendered pages (that include a significant amount of 
+    JavaScript code) which helped us avoid using Selenium. Requests and
+    BeautifulSoup help to power the actual scraping that occurs. 
+    We would also like to thank the CS 21 teaching staff for all of the 
+    feedback and design advice we got throughout our project journey. 
+    It was all such a huge help.
