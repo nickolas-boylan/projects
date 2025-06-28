@@ -135,16 +135,8 @@ Files:
             - This is an elephant icon that is used within the tab so it 
               is identifiable when multiple tabs are opened up on a browser.
 
-Time Spent:    
-     We spent around 2 months creating this product.
-
-
 Acknowledgements: 
-
     The project leans on multiple different outside resources. Zyte allows
     us to fetch fully rendered pages (that include a significant amount of 
     JavaScript code) which helped us avoid using Selenium. Requests and
     BeautifulSoup help to power the actual scraping that occurs. 
-    We would also like to thank the CS 21 teaching staff for all of the 
-    feedback and design advice we got throughout our project journey. 
-    It was all such a huge help.
