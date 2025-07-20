@@ -1,0 +1,9 @@
+**This is currently being redevloped.**
+
+**All features associated with logging in are unavailable currently**
+
+## Set up 
+This was set up to use a local php server running the router.php.
+
+In the directory containing all files, run the command:
+```php -S 127.0.0.1:port#```
