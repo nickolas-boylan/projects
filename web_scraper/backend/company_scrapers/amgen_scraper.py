@@ -27,7 +27,8 @@ class AmgenScraper(MainScraper):
             the keys: 'phase', 'treatment_name', 'indication', 'company', and
             'therapeutic_area'
         '''
-        found_html = self.fetch_with_zyte()
+        found_html = self.fetch_from_file()
+        self.simulate_response_delay()
         if not found_html:
             return []
 

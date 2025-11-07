@@ -8,6 +8,9 @@
 #############################################################################
 
 import requests
+from time import sleep
+from random import randint
+import json
 import logging
 import os
 
@@ -35,7 +38,27 @@ class MainScraper:
         self.company_name = company
         self.url = url
         self.zyte_api_key = os.getenv("ZYTE_API_KEY")
+    
+    def simulate_response_delay(self):
+        sleep(randint(5,10))
 
+    def fetch_from_file(self):
+        '''
+        Load the html from a file containing the Zyte response
+        
+        Returns:
+            The response to the request containing all the html code
+        
+        Notes:
+            - If the file doesn't exist, the empty string is returned
+        '''
+        try:
+            f = open(self.company_name + "_response.json", 'r')
+            response = json.load(f)
+            return response.get("browserHtml", "")
+        except Exception as e:
+            logging.error(f"Error grabbing {self.company_name}: {str(e)}")
+            return ""
     
     def fetch_with_zyte(self):
         '''
@@ -68,6 +91,9 @@ class MainScraper:
             if response.status_code == 200:
                 found_code = response.json()
                 logging.info(f"Got response from API for {self.company_name}.")
+                
+                with open(self.company_name + "_response.json", 'w') as f:
+                    json.dump(found_code, f, indent=4)
                 return found_code.get("browserHtml", "")
             else:
                 logging.error(f"Failed to grab {self.company_name}. Current "\
