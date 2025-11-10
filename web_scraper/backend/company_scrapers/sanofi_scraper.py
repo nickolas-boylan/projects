@@ -38,7 +38,7 @@ class SanofiScraper(MainScraper):
         grid_sorted = bf_soup.select("div.MuiGrid2-root.MuiGrid2-container."\
             "MuiGrid2-direction-xs-row.MuiGrid2-spacing-mobile-6."\
             "MuiGrid2-spacing-tablet-6.MuiGrid2-spacing-desktop-6."\
-            "css-19oavfy-MuiGrid2-root")
+            "css-tl9keh")
         
         # Go through all divs where each div is one treatment
         for div in grid_sorted:
@@ -49,7 +49,7 @@ class SanofiScraper(MainScraper):
         
             phase = contents[1]
             phase_num = phase.select("div.MuiTypography-root."\
-                "MuiTypography-body1.css-f9uo9l-MuiTypography-root")[0]
+                "MuiTypography-body1.css-1kcf5u9")[0]
             phase_num = phase_num.get_text(strip=True)
             
             found_phase = "Phase " + phase_num
