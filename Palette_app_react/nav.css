@@ -1,0 +1,254 @@
+@font-face {
+    font-family: Gilroy-SB;
+    src: url("gilroy/Gilroy-SemiBold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Gilroy-M;
+    src: url("gilroy/Gilroy-Medium.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Void;
+    src: url("gilroy/VoidSemiBold.woff") format("woff");
+}
+
+:root {
+    --main-bg: #fff;
+    --line: #d1d1d1;
+    --nav-link-active: #ffebf2;
+    --nav-link-hover: #FAF4F6;
+    --nav-link-icon: #555555;
+    --text: #212121;
+    --main-red: #F92B67;
+    --hover-red: #e12b5f;
+    --second-text: #a0a0a0;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    min-width: 330px;
+    overflow: hidden;
+    background-color: var(--main-bg);
+    transition: background-color 0.35s;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: Gilroy-SB;
+}
+
+a {
+    text-decoration: none;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+.nav {
+    width: 20%;
+    min-width: 190px;
+    max-width: 330px;
+    box-sizing: border-box;
+    height: 100vh;
+    padding-top: 40px;
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-top {
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav-bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--line);
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+}
+
+.logo {
+    width: 55%;
+}
+
+.links-container {
+    width: 100%;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.nav-link {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 9px;
+}
+
+.nav-link.current {
+    background-color: var(--nav-link-active);
+}
+
+.nav-link.current:hover {
+    background-color: var(--nav-link-active);
+}
+
+.nav-link:hover {
+    background-color: var(--nav-link-hover);
+}
+
+.nav-link-lable {
+    color: var(--text);
+    margin-right: 20px;
+}
+
+.nav-link-icon {
+    margin-left: 20px;
+    margin-right: 9px;
+    min-width: 19px;
+    min-height: 19px;
+}
+
+.nav-link-icon path {
+    stroke: var(--nav-link-icon);
+}
+
+.dark-mode-container {
+    width: 85%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    row-gap: 10px;
+    justify-content: center;
+    padding-right: 20px;
+}
+
+.dark-mode-container-left {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 9px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 20px;
+    min-width: 38px;
+}
+  
+  /* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+  
+  /* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--line);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+  
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 1px;
+    bottom: 1px;
+    background-color: var(--main-bg);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+  
+input:checked + .slider {
+    background-color: var(--main-red);
+}
+  
+input:checked + .slider:before {
+    -webkit-transform: translateX(18px);
+    -ms-transform: translateX(18px);
+    transform: translateX(18px);
+}
+  
+  /* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+  
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
+/* --------------- BODY --------------- */
+.body-container {
+    width: 80%;
+    padding: 40px 40px;
+    overflow: scroll;
+}
+
+@media (max-width: 500px) {
+    .nav-link-lable {display: none;}
+
+    .nav-link {
+        justify-content: center;
+        width: auto;
+        padding: 18px;
+        margin: 0;
+        height: auto;
+    }
+
+    .nav-link-icon {
+        margin: 0;
+    }
+
+    .links-container {
+        width: auto;
+        row-gap: 20px;
+    }
+
+    .nav {
+        width: 75px;
+        min-width: 75px;
+    }
+
+    .dark-mode-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+    }
+
+    .dark-mode-container-left {
+        width: auto;
+    }
+}
